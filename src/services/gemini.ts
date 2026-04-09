@@ -1,6 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
+const ai = new GoogleGenerativeAI("AIzaSyAcBg7ADKzt2XxU4-UuBFpzVjOzWYuan3Q");
 
 const SYSTEM_PROMPT = `
 أنت خبير تسويق متخصص في السوق المصري.

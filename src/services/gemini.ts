@@ -1,6 +1,6 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenerativeAI("AIzaSyAcBg7ADKzt2XxU4-UuBFpzVjOzWYuan3Q");
+const ai = new GoogleGenerativeAI("AIzaSyB5ez1fEeI6CVVA3JfqY8HG1MUwJ-1Gl24");
 
 const SYSTEM_PROMPT = `
 أنت خبير تسويق متخصص في السوق المصري.

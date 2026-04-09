@@ -1,5 +1,6 @@
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
+// ده المفتاح الجديد اللي أنت لسه مطلعه - مبروك يا هندسة!
 const ai = new GoogleGenerativeAI("AIzaSyAyycUxbxCvfxk1RNc-61JHlxCjnVRGBVM");
 
 const SYSTEM_PROMPT = `
@@ -17,26 +18,39 @@ const SYSTEM_PROMPT = `
 `;
 
 export async function generateMarketingPost(productName: string, productDescription?: string, imageBase64?: string) {
+  // بنجهز الطلب للذكاء الاصطناعي
   let prompt = `اكتب بوست تسويقي لمنتج اسمه: ${productName}.`;
   if (productDescription) {
     prompt += ` وصف المنتج: ${productDescription}`;
   }
 
-  const parts: any[] = [{ text: SYSTEM_PROMPT + "\n\n" + prompt }];
-  
+  const parts: any[] = [{ text: prompt }];
+
+  // لو فيه صورة، بنبعتها مع الكلام
   if (imageBase64) {
+    const base64Data = imageBase64.includes(",") ? imageBase64.split(",")[1] : imageBase64;
     parts.push({
       inlineData: {
         mimeType: "image/jpeg",
-        data: imageBase64.split(",")[1] || imageBase64,
+        data: base64Data,
       },
     });
   }
 
-  const response = await ai.models.generateContent({
-    model: "gemini-3-flash-preview",
-    contents: [{ role: "user", parts }],
-  });
+  try {
+    // بننادي الموديل المستقر (Flash) عشان يدينا أحسن وأسرع نتيجة
+    const model = ai.getGenerativeModel({ 
+      model: "gemini-1.5-flash",
+      systemInstruction: SYSTEM_PROMPT 
+    });
 
-  return response.text || "عذراً، لم أستطع توليد البوست حالياً.";
+    const result = await model.generateContent({
+      contents: [{ role: "user", parts }],
+    });
+
+    return result.response.text();
+  } catch (error) {
+    console.error("AI Error:", error);
+    return "يا بطل حصل مشكلة بسيطة، جرب تدوس على الزرار تاني كدة!";
+  }
 }
